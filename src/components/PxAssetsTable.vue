@@ -64,7 +64,6 @@
 <script>
 import PxButton from '@/components/PxButton'
 
-
 export default {
   name: 'PxAssetsTable',
 
@@ -78,17 +77,13 @@ export default {
   },
 
   methods: {
-    goToCoin(coin){
+    goToCoin(coin) {
       this.$router.push({
-        name:'coin-detail',
-        params: {id: coin}
+        name: 'coin-detail',
+        params: { id: coin },
       })
-
-    }
-
-
-  }
-
+    },
+  },
 }
 </script>
 

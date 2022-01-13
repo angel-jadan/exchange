@@ -48,9 +48,10 @@
 
         <div class="my-10 sm:mt-0 flex flex-col justify-center text-center">
           <button
+            @click="toggleConverter"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           >
-            Cambiar
+            {{ fromUSD ? ` USD a ${asset.symbol}` : `${asset.symbol} a USD` }}
           </button>
 
           <div class="flex flex-row my-5">
@@ -58,12 +59,18 @@
               <input
                 id="convertValue"
                 type="number"
+                :placeholder="
+                  'Valor en ' + (fromUSD ? `USD` : `${asset.symbol}`)
+                "
+                v-model="converValue"
                 class="text-center bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
               />
             </label>
           </div>
 
-          <span class="text-xl"></span>
+          <span class="text-xl"
+            >{{ converResult }} {{ fromUSD ? `${asset.symbol}` : `USD` }}</span
+          >
         </div>
       </div>
 
@@ -123,10 +130,30 @@ export default {
       isLoading: false,
       gchart: false,
       misLoading: false,
+      fromUSD: true,
+      converValue: null,
     }
   },
 
+  watch: {
+    $route() {
+      this.getCoin()
+    },
+  },
+
   computed: {
+    converResult() {
+      if (!this.converValue) {
+        return 0
+      }
+
+      const result = this.fromUSD
+        ? this.converValue / this.asset.priceUsd
+        : this.converValue * this.asset.priceUsd
+
+      return result.toFixed(4)
+    },
+
     min() {
       return Math.min(
         ...this.history.map((h) => parseFloat(h.priceUsd).toFixed(2))
@@ -151,6 +178,10 @@ export default {
   },
 
   methods: {
+    toggleConverter() {
+      this.fromUSD = !this.fromUSD
+    },
+
     getWebSite(exchange) {
       this.$set(exchange, 'isLoading', true)
 

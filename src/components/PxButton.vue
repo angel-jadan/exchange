@@ -9,7 +9,7 @@
       :size="8"
     ></beat-loader>
     <p v-show="!isLoading">
-      <slot ></slot>
+      <slot></slot>
     </p>
   </button>
 </template>
